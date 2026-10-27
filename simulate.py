@@ -8,6 +8,7 @@ dt = 1.0                # seconds between GPS readings
 num_steps = 50          # how many readings we take
 velocity = 2.0          # drone speed in meters per second
 gps_noise_std = 3.0     # GPS is typically off by about 3 meters
+wind_std = 0.5          # wind randomly pushes the drone about 0.5 meters each second
 
 # --simulate--
 true_positions = []
@@ -15,15 +16,24 @@ gps_readings = []
 
 position = 0.0
 for step in range(num_steps):
-    position = position + velocity * dt
+    position = position + velocity * dt + np.random.normal(0, wind_std)
     true_positions.append(position)
 
     noisy_reading = position + np.random.normal(0, gps_noise_std)
     gps_readings.append(noisy_reading)
 
+# --Predict only tracker--
+predicted_positions = []
+estimate =0.0
+
+for step in range(num_steps):
+    estimate = estimate + velocity * dt
+    predicted_positions.append(estimate)
+
 # --plot--
 plt.plot(true_positions, label="True Positions", linewidth=2)
 plt.scatter(range(num_steps), gps_readings, color="red", s=12, label="GPS Readings")
+plt.plot(predicted_positions, label="Prediction only", linestyle="--", color="green")
 plt.xlabel("Time step (seconds)")
 plt.ylabel("Position (meters)")
 plt.title("True drone path vs noisy GPS")
