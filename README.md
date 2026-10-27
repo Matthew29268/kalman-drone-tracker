@@ -2,6 +2,8 @@
 
 Tracking a simulated drone's position from noisy GPS data using a Kalman filter, built from scratch in Python with NumPy and Matplotlib.
 
+![Kalman filter tracking a drone from noisy GPS](results.png)
+
 ## Results
 
 | Method | Position error (RMSE) |
