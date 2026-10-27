@@ -49,6 +49,22 @@ for gps in gps_readings:
 
     kalman_estimates.append(estimate)
 
+# --Measure accuracy--
+true_arr = np.array(true_positions)
+gps_arr = np.array(gps_readings)
+pred_arr = np.array(predicted_positions)
+kalman_arr = np.array(kalman_estimates)
+
+gps_rmse = np.sqrt(np.mean((gps_arr - true_arr) ** 2))
+pred_rmse = np.sqrt(np.mean((pred_arr - true_arr) ** 2))
+kalman_rmse = np.sqrt(np.mean((kalman_arr - true_arr) ** 2))
+
+print(f"Raw GPS error:         {gps_rmse:.2f} m")
+print(f"Prediction-only error: {pred_rmse:.2f} m")
+print(f"Kalman filter error:   {kalman_rmse:.2f} m")
+
+improvement = (1 - kalman_rmse / gps_rmse) * 100
+print(f"Kalman filter reduced error by {improvement:.0f}% vs raw GPS")
 
 # --plot--
 plt.plot(true_positions, label="True Positions", linewidth=2)
